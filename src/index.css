@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", sans-serif;
+  --color-official: #FFD400;
+
+  --color-orange-50: #FFFBE5;
+  --color-orange-100: #FFF7CC;
+  --color-orange-200: #FFEE99;
+  --color-orange-300: #FFE066;
+  --color-orange-400: #FFD933;
+  --color-orange-500: #FFD400;
+  --color-orange-550: #E6BF00;
+  --color-orange-600: #E6BF00;
+  --color-orange-650: #CCA900;
+  --color-orange-700: #B39400;
+  --color-orange-800: #997F00;
+  --color-orange-900: #806A00;
+}
+
+/* Force Poppins on all elements */
+*, *::before, *::after {
+  font-family: "Poppins", "Open Sans", sans-serif;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Print Styles for Certificate & Credentials */
+@media print {
+  @page {
+    size: 297mm 210mm;
+    margin: 0 !important;
+  }
+
+  /* Hide app header, sidebars, navigation, forms, buttons */
+  aside,
+  header,
+  nav,
+  form,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  html, body {
+    width: 297mm !important;
+    height: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+  }
+
+  #printable-certificate {
+    position: fixed !important;
+    left: 10mm !important;
+    top: 10mm !important;
+    width: 277mm !important;
+    height: 190mm !important;
+    margin: 0 !important;
+    padding: 36px 44px !important;
+    box-sizing: border-box !important;
+    border: 3px solid #FFD400 !important;
+    border-radius: 24px !important;
+    background: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-shadow: none !important;
+    z-index: 99999 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #printable-certificate .no-print {
+    display: none !important;
+  }
+}

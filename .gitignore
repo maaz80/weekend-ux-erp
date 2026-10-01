@@ -1,0 +1,12 @@
+node_modules
+
+# Next.js build output
+.next/
+
+# Storybook static build
+storybook-static/
+
+# Local Netlify folder
+.netlify
+.env
+
