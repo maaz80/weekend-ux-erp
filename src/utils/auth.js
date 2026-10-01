@@ -27,9 +27,9 @@ export const clearErpToken = () => {
 export const getErpUser = () => {
   try {
     const raw = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw) : { username: "Admin", role: "admin" };
+    return raw ? JSON.parse(raw) : { username: "erpadmin", role: "erp_admin" };
   } catch {
-    return { username: "Admin", role: "admin" };
+    return { username: "erpadmin", role: "erp_admin" };
   }
 };
 

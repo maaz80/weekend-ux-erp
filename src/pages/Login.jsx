@@ -3,8 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { clearErpToken, isErpAuthenticated, setErpToken } from "../utils/auth.js";
 import { HiOutlineLockClosed, HiOutlineUser } from "react-icons/hi";
 
-const AUTH_URL = "http://localhost:5000/api/crm/auth/login";
-const ADMIN_AUTH_URL = "http://localhost:5000/api/admin/login";
+const ERP_API_URL = import.meta.env.VITE_ERP_API_URL || "http://localhost:5000/api/erp";
+const AUTH_URL = `${ERP_API_URL.replace(/\/+$/, "")}/auth/login`;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,36 +25,24 @@ export default function Login() {
     setLoading(true);
 
     try {
-      let res = null;
-      let data = null;
-
-      try {
-        res = await fetch(AUTH_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: username.trim(), password })
-        });
-        data = await res.json();
-      } catch (err) {
-        res = await fetch(ADMIN_AUTH_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: username.trim(), password })
-        });
-        data = await res.json();
-      }
+      const res = await fetch(AUTH_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim(), password })
+      });
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.error || data?.message || "Login failed.");
+        throw new Error(data?.error || data?.message || "Invalid ERP credentials.");
       }
 
       const token = data.token || "authenticated_erp_session";
-      const user = data.user || { username: username.trim(), role: "Administrator" };
+      const user = data.user || { username: username.trim(), role: "erp_admin" };
 
       setErpToken(token, user);
       navigate("/", { replace: true });
     } catch (err) {
-      setError(err.message || "Invalid username or password.");
+      setError(err.message || "Invalid ERP username or password.");
     } finally {
       setLoading(false);
     }
@@ -110,7 +98,7 @@ export default function Login() {
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
                   className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-official/30 focus:border-official focus:bg-white transition-all duration-200"
-                  placeholder="admin"
+                  placeholder="erpadmin"
                   autoComplete="username"
                   required
                 />
