@@ -150,3 +150,54 @@ export const fetchBatchAttendanceHistory = async (batchId, limit = 20) => {
 export const fetchStudentAttendance = async (studentId) => {
   return await fetchWithAuth(`${BASE_URL}/students/${studentId}/attendance`);
 };
+
+// ==========================================
+// Omnichannel Q&A Rules & Unified Inbox APIs
+// ==========================================
+export const fetchFaqRules = async () => {
+  return await fetchWithAuth(`${BASE_URL}/faq-rules`);
+};
+
+export const createFaqRule = async (ruleData) => {
+  return await fetchWithAuth(`${BASE_URL}/faq-rules`, {
+    method: "POST",
+    body: JSON.stringify(ruleData)
+  });
+};
+
+export const updateFaqRule = async (id, ruleData) => {
+  return await fetchWithAuth(`${BASE_URL}/faq-rules/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(ruleData)
+  });
+};
+
+export const deleteFaqRule = async (id) => {
+  return await fetchWithAuth(`${BASE_URL}/faq-rules/${id}`, {
+    method: "DELETE"
+  });
+};
+
+export const fetchConversations = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return await fetchWithAuth(`${BASE_URL}/conversations${query ? `?${query}` : ""}`);
+};
+
+export const fetchConversationMessages = async (id) => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/${id}/messages`);
+};
+
+export const sendConversationReply = async (id, replyText, channel) => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/${id}/reply`, {
+    method: "POST",
+    body: JSON.stringify({ message: replyText, channel })
+  });
+};
+
+export const toggleConversationBot = async (id, isBotActive) => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/${id}/toggle-bot`, {
+    method: "PUT",
+    body: JSON.stringify({ isBotActive })
+  });
+};
+

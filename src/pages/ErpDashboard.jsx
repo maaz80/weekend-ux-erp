@@ -6,6 +6,7 @@ import BatchesView from "../components/BatchesView.jsx";
 import FeesView from "../components/FeesView.jsx";
 import AttendanceView from "../components/AttendanceView.jsx";
 import CertificatesView from "../components/CertificatesView.jsx";
+import OmnichannelInboxView from "../components/OmnichannelInboxView.jsx";
 import AddStudentModal from "../components/AddStudentModal.jsx";
 import StudentProfileDrawer from "../components/StudentProfileDrawer.jsx";
 
@@ -295,6 +296,10 @@ export default function ErpDashboard() {
 
       {activeTab === "certificates" && (
         <CertificatesView students={students} />
+      )}
+
+      {activeTab === "omnichannel" && (
+        <OmnichannelInboxView />
       )}
 
       {/* Add Student Modal */}

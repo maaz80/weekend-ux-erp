@@ -11,7 +11,8 @@ import {
   HiOutlineSearch,
   HiOutlineMenu,
   HiOutlineX,
-  HiOutlineLogout
+  HiOutlineLogout,
+  HiOutlineChatAlt2
 } from "react-icons/hi";
 import { clearErpToken, getErpUser } from "../utils/auth.js";
 
@@ -40,7 +41,8 @@ export default function ErpLayout({
     { id: "batches", label: "Batches & Cohorts", icon: HiOutlineUserGroup, count: stats?.batchesCount },
     { id: "fees", label: "Fees & Installments", icon: HiOutlineCurrencyRupee },
     { id: "attendance", label: "Class Attendance", icon: HiOutlineClipboardCheck },
-    { id: "certificates", label: "Certificates", icon: HiOutlineBadgeCheck }
+    { id: "certificates", label: "Certificates", icon: HiOutlineBadgeCheck },
+    { id: "omnichannel", label: "Smart Inbox & Bot FAQ", icon: HiOutlineChatAlt2 }
   ];
 
   return (
