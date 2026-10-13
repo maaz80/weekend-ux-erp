@@ -92,146 +92,16 @@ const INITIAL_FAQ_RULES = [
   }
 ];
 
-// Sample initial omnichannel conversations
-const INITIAL_CONVERSATIONS = [
-  {
-    _id: "conv-1",
-    channel: "instagram",
-    senderName: "Priya Sharma",
-    senderHandle: "@priya.designs",
-    senderContact: "priya.sharma99@gmail.com",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces",
-    isBotActive: true,
-    status: "bot_handled",
-    unread: false,
-    lastMessage: "Thank you! I will register for the demo session.",
-    lastMessageAt: "10 mins ago",
-    courseInterest: "UI/UX Design Masterclass",
-    messages: [
-      {
-        id: "m1",
-        sender: "user",
-        text: "Hi, can I get a free demo class for UI/UX course?",
-        timestamp: "Today, 10:15 AM",
-        channel: "instagram"
-      },
-      {
-        id: "m2",
-        sender: "bot",
-        text: "Awesome! 🎯 You're invited to our upcoming Live Interactive Mentorship Session with Senior Product Designers.\n\n👉 Register your free demo seat here:\nhttps://weekendux.in/demo\n\nOur admissions counselor will also assist you with your schedule. If you have questions, reply 'COUNSELOR' or share your phone number!",
-        matchedFaq: "Free Demo Class / Trial Session",
-        timestamp: "Today, 10:15 AM",
-        channel: "instagram"
-      },
-      {
-        id: "m3",
-        sender: "user",
-        text: "Thank you! I will register for the demo session.",
-        timestamp: "Today, 10:25 AM",
-        channel: "instagram"
-      }
-    ]
-  },
-  {
-    _id: "conv-2",
-    channel: "email",
-    senderName: "Ankit Verma",
-    senderHandle: "ankit.verma.dev@gmail.com",
-    senderContact: "ankit.verma.dev@gmail.com",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces",
-    isBotActive: false,
-    status: "needs_human_reply",
-    unread: true,
-    lastMessage: "I have 3 years experience in frontend. Can I get a tailored discount if my company sponsors 2 candidates?",
-    lastMessageAt: "25 mins ago",
-    courseInterest: "Advanced Design Systems & Figma",
-    messages: [
-      {
-        id: "m4",
-        sender: "user",
-        text: "Hello Weekend UX team,\nWhat are the fees for the upcoming batch?",
-        timestamp: "Today, 09:40 AM",
-        channel: "email"
-      },
-      {
-        id: "m5",
-        sender: "bot",
-        text: "The UI/UX Masterclass fee is ₹45,000 (inclusive of live mentorship, portfolio review, and placement support).\n\n💳 Flexible No-Cost EMI options starting at ₹3,750/month are available.\n\nWould you like our counselor to call you with early-bird scholarship details? Reply with your Phone Number!",
-        matchedFaq: "Course Fees, EMI & Discount Offers",
-        timestamp: "Today, 09:41 AM",
-        channel: "email"
-      },
-      {
-        id: "m6",
-        sender: "user",
-        text: "I have 3 years experience in frontend. Can I get a tailored discount if my company sponsors 2 candidates?",
-        timestamp: "Today, 10:10 AM",
-        channel: "email"
-      }
-    ]
-  },
-  {
-    _id: "conv-3",
-    channel: "facebook",
-    senderName: "Sneha Mukherjee",
-    senderHandle: "Sneha Mukherjee (Messenger)",
-    senderContact: "+91 98310 22345",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces",
-    isBotActive: true,
-    status: "bot_handled",
-    unread: false,
-    lastMessage: "Here is the complete UI/UX curriculum overview! 📘",
-    lastMessageAt: "1 hour ago",
-    courseInterest: "UI/UX Design Masterclass",
-    messages: [
-      {
-        id: "m7",
-        sender: "user",
-        text: "Can someone share the detailed syllabus brochure please?",
-        timestamp: "Today, 09:12 AM",
-        channel: "facebook"
-      },
-      {
-        id: "m8",
-        sender: "bot",
-        text: "Here is the complete UI/UX curriculum overview! 📘\n\nOur industry-standard programs include:\n• UI/UX Design & Design Thinking\n• Figma Mastery & Design Systems\n• Generative AI Tools for Modern Designers\n• 1-on-1 Portfolio Reviews & Placement Assistance\n\n📥 Download Syllabus PDF:\nhttps://weekendux.in/brochure.pdf",
-        matchedFaq: "Curriculum & Course Syllabus",
-        timestamp: "Today, 09:13 AM",
-        channel: "facebook"
-      }
-    ]
-  },
-  {
-    _id: "conv-4",
-    channel: "instagram",
-    senderName: "Rohan Kulkarni",
-    senderHandle: "@rohan_uxer",
-    senderContact: "+91 97654 32109",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces",
-    isBotActive: false,
-    status: "needs_human_reply",
-    unread: true,
-    lastMessage: "Hey, do you guys provide offline classes in Bangalore or is it completely online?",
-    lastMessageAt: "2 hours ago",
-    courseInterest: "Generative AI for Product Designers",
-    messages: [
-      {
-        id: "m9",
-        sender: "user",
-        text: "Hey, do you guys provide offline classes in Bangalore or is it completely online?",
-        timestamp: "Today, 08:30 AM",
-        channel: "instagram"
-      }
-    ]
-  }
-];
+// Initial fallback empty conversations
+const INITIAL_CONVERSATIONS = [];
 
 export default function OmnichannelInboxView() {
   const [activeSubTab, setActiveSubTab] = useState("inbox"); // 'inbox' | 'rules'
   
   // Conversations State
-  const [conversations, setConversations] = useState(INITIAL_CONVERSATIONS);
-  const [selectedConvId, setSelectedConvId] = useState(INITIAL_CONVERSATIONS[1]._id);
+  const [conversations, setConversations] = useState([]);
+  const [selectedConvId, setSelectedConvId] = useState(null);
+  const [loadingConversations, setLoadingConversations] = useState(true);
   const [searchConvQuery, setSearchConvQuery] = useState("");
   const [channelFilter, setChannelFilter] = useState("all"); // 'all' | 'instagram' | 'facebook' | 'email'
   const [statusFilter, setStatusFilter] = useState("all"); // 'all' | 'unread' | 'needs_human_reply' | 'bot_handled'
@@ -279,26 +149,29 @@ export default function OmnichannelInboxView() {
         if (rulesRes?.rules?.length) {
           setFaqRules(rulesRes.rules);
         }
-      } catch {
-        // Fallback to initial mock rules
+      } catch (err) {
+        console.warn("Could not fetch FAQ rules:", err);
       }
 
       try {
+        setLoadingConversations(true);
         const convRes = await fetchConversations();
-        if (convRes?.conversations?.length) {
+        if (convRes?.conversations) {
           setConversations(convRes.conversations);
-          if (!selectedConvId && convRes.conversations[0]) {
-            setSelectedConvId(convRes.conversations[0]._id);
+          if (convRes.conversations.length > 0) {
+            setSelectedConvId((prev) => prev || convRes.conversations[0]._id);
           }
         }
-      } catch {
-        // Fallback to initial mock conversations
+      } catch (err) {
+        console.warn("Could not fetch conversations:", err);
+      } finally {
+        setLoadingConversations(false);
       }
     };
     fetchRealData();
   }, []);
 
-  const activeConversation = conversations.find((c) => c._id === selectedConvId) || conversations[0];
+  const activeConversation = conversations.find((c) => c._id === selectedConvId) || conversations[0] || null;
 
   // ==========================================
   // CONVERSATION ACTIONS
@@ -529,10 +402,11 @@ export default function OmnichannelInboxView() {
 
   // Filtered Conversations
   const filteredConversations = conversations.filter((c) => {
+    const q = searchConvQuery.toLowerCase();
     const matchesSearch =
-      c.senderName.toLowerCase().includes(searchConvQuery.toLowerCase()) ||
-      c.senderHandle.toLowerCase().includes(searchConvQuery.toLowerCase()) ||
-      (c.lastMessage && c.lastMessage.toLowerCase().includes(searchConvQuery.toLowerCase()));
+      (c.senderName && c.senderName.toLowerCase().includes(q)) ||
+      (c.senderHandle && c.senderHandle.toLowerCase().includes(q)) ||
+      (c.lastMessage && c.lastMessage.toLowerCase().includes(q));
 
     const matchesChannel = channelFilter === "all" || c.channel === channelFilter;
     const matchesStatus =
@@ -686,7 +560,26 @@ export default function OmnichannelInboxView() {
 
             {/* Conversation List Items */}
             <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
-              {filteredConversations.length === 0 ? (
+              {loadingConversations ? (
+                <div className="p-3.5 space-y-3">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div
+                      key={item}
+                      className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-100 flex items-start gap-3 animate-pulse"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0" />
+                      <div className="flex-1 min-w-0 space-y-2 py-0.5">
+                        <div className="flex items-center justify-between">
+                          <div className="w-24 h-3.5 bg-slate-200 rounded" />
+                          <div className="w-10 h-2.5 bg-slate-100 rounded" />
+                        </div>
+                        <div className="w-20 h-2.5 bg-slate-100 rounded" />
+                        <div className="w-full h-3 bg-slate-100 rounded" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredConversations.length === 0 ? (
                 <div className="p-8 text-center text-slate-400">
                   <HiOutlineChatAlt2 className="w-10 h-10 mx-auto mb-2 text-slate-300" />
                   <p className="text-xs font-medium">No chatters found</p>
@@ -769,7 +662,39 @@ export default function OmnichannelInboxView() {
           </div>
 
           {/* Right Column: Active Conversation Thread */}
-          {activeConversation ? (
+          {loadingConversations ? (
+            <div className="flex-1 flex flex-col bg-slate-50/60 overflow-hidden">
+              {/* Skeleton Header */}
+              <div className="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between shrink-0 animate-pulse">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-slate-200" />
+                  <div className="space-y-1.5">
+                    <div className="w-28 h-4 bg-slate-200 rounded" />
+                    <div className="w-20 h-2.5 bg-slate-100 rounded" />
+                  </div>
+                </div>
+                <div className="w-32 h-8 bg-slate-100 rounded-xl" />
+              </div>
+              {/* Skeleton Message Bubbles */}
+              <div className="flex-1 p-6 space-y-4 animate-pulse">
+                <div className="flex items-start gap-2.5 max-w-md">
+                  <div className="w-7 h-7 rounded-full bg-slate-200 shrink-0" />
+                  <div className="w-64 h-16 bg-white rounded-2xl rounded-tl-sm border border-slate-200/80 p-3 shadow-2xs" />
+                </div>
+                <div className="flex items-end justify-end">
+                  <div className="w-72 h-14 bg-amber-100/70 rounded-2xl rounded-tr-sm border border-amber-200/50 p-3" />
+                </div>
+                <div className="flex items-start gap-2.5 max-w-md">
+                  <div className="w-7 h-7 rounded-full bg-slate-200 shrink-0" />
+                  <div className="w-56 h-12 bg-white rounded-2xl rounded-tl-sm border border-slate-200/80 p-3 shadow-2xs" />
+                </div>
+              </div>
+              {/* Skeleton Input Bar */}
+              <div className="bg-white border-t border-slate-200 p-4 animate-pulse">
+                <div className="w-full h-10 bg-slate-100 rounded-xl" />
+              </div>
+            </div>
+          ) : activeConversation ? (
             <div className="flex-1 flex flex-col bg-slate-100/70 overflow-hidden">
               {/* Thread Header */}
               <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 shadow-2xs">
@@ -967,8 +892,10 @@ export default function OmnichannelInboxView() {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-slate-50 text-slate-400">
-              <p>Select a chatter from the left list to view conversation</p>
+            <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 text-slate-400 p-8 text-center">
+              <HiOutlineChatAlt2 className="w-12 h-12 text-slate-300 mb-2" />
+              <p className="text-sm font-semibold text-slate-700">No conversation selected</p>
+              <p className="text-xs text-slate-400 mt-1">Select a chatter from the left list to view conversation</p>
             </div>
           )}
         </div>
