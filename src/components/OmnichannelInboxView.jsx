@@ -34,7 +34,8 @@ import {
   fetchConversations,
   fetchConversationMessages,
   sendConversationReply,
-  toggleConversationBot
+  toggleConversationBot,
+  deleteConversation
 } from "../utils/api.js";
 
 // Sample initial FAQ Rules for Weekend UX
@@ -366,6 +367,22 @@ export default function OmnichannelInboxView() {
         ? "🤖 Bot Auto-Responder turned ON for this chatter"
         : "👤 Bot paused: Human Takeover activated"
     );
+  };
+
+  const handleDeleteConversation = async (convId, e) => {
+    if (e) e.stopPropagation();
+    if (!window.confirm("Are you sure you want to delete this chat conversation?")) return;
+    try {
+      await deleteConversation(convId);
+      setConversations((prev) => prev.filter((c) => c._id !== convId));
+      if (selectedConvId === convId) {
+        setSelectedConvId(null);
+      }
+      showToast("🗑️ Conversation deleted successfully");
+    } catch (err) {
+      console.error("Failed to delete conversation:", err);
+      showToast("❌ Could not delete conversation");
+    }
   };
 
   const handleInsertCannedAnswer = (rule) => {
@@ -825,6 +842,15 @@ export default function OmnichannelInboxView() {
                       {activeConversation.isBotActive ? "Active" : "Paused"}
                     </span>
                   </div>
+
+                  {/* Delete Conversation Button */}
+                  <button
+                    onClick={(e) => handleDeleteConversation(activeConversation._id, e)}
+                    title="Delete Conversation"
+                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors border border-slate-200 hover:border-rose-200 cursor-pointer"
+                  >
+                    <HiOutlineTrash className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 

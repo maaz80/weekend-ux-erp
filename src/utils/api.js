@@ -201,3 +201,9 @@ export const toggleConversationBot = async (id, isBotActive) => {
   });
 };
 
+export const deleteConversation = async (id) => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/${id}`, {
+    method: "DELETE"
+  });
+};
+
