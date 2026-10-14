@@ -207,3 +207,15 @@ export const deleteConversation = async (id) => {
   });
 };
 
+export const syncGmailInbox = async (sinceHours = 48) => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/sync-gmail`, {
+    method: "POST",
+    body: JSON.stringify({ sinceHours })
+  });
+};
+
+export const fetchGmailStatus = async () => {
+  return await fetchWithAuth(`${BASE_URL}/conversations/gmail-status`);
+};
+
+

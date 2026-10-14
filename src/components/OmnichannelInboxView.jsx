@@ -35,7 +35,8 @@ import {
   fetchConversationMessages,
   sendConversationReply,
   toggleConversationBot,
-  deleteConversation
+  deleteConversation,
+  syncGmailInbox
 } from "../utils/api.js";
 
 // Sample initial FAQ Rules for Weekend UX
@@ -132,6 +133,30 @@ export default function OmnichannelInboxView() {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // Gmail Inbound Sync State
+  const [syncingGmail, setSyncingGmail] = useState(false);
+  const handleSyncGmail = async () => {
+    try {
+      setSyncingGmail(true);
+      const res = await syncGmailInbox();
+      const count = res?.result?.processedCount || 0;
+      showToast(
+        count > 0
+          ? `✅ Synced Gmail! Auto-replied to ${count} new student inquiry.`
+          : `✅ Gmail inbox is up-to-date. No new unread student emails.`
+      );
+      // Refresh conversations list
+      const convRes = await fetchConversations();
+      if (convRes?.conversations) {
+        setConversations(convRes.conversations);
+      }
+    } catch (err) {
+      showToast(`⚠️ Sync failed: ${err.message}`);
+    } finally {
+      setSyncingGmail(false);
+    }
   };
 
   // Auto-scroll chat to bottom when conversation changes or new message is added
@@ -497,6 +522,18 @@ export default function OmnichannelInboxView() {
               </span>
             </button>
           </div>
+
+          {activeSubTab === "inbox" && (
+            <button
+              onClick={handleSyncGmail}
+              disabled={syncingGmail}
+              className="flex items-center gap-1.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-bold px-3 py-2 rounded-xl text-xs hover:bg-slate-50 active:scale-95 transition-all shadow-2xs cursor-pointer disabled:opacity-60"
+              title="Check for new student emails and trigger auto-replies"
+            >
+              <HiOutlineRefresh className={`w-3.5 h-3.5 text-rose-500 ${syncingGmail ? "animate-spin" : ""}`} />
+              <span>{syncingGmail ? "Syncing Gmail..." : "Sync Gmail Inbox"}</span>
+            </button>
+          )}
 
           {activeSubTab === "rules" && (
             <button
