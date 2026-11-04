@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CustomDropdown from "./CustomDropdown";
+import { fetchBatchById } from "../utils/api.js";
 import {
   HiOutlineUserGroup,
   HiOutlinePlusCircle,
@@ -40,9 +41,8 @@ export default function BatchesView({
     setSelectedBatch(batch);
     setLoadingRoster(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/erp/batches/${batch._id}`);
-      const data = await res.json();
-      if (data.success && data.batch) {
+      const data = await fetchBatchById(batch._id);
+      if (data && data.success && data.batch) {
         setBatchRoster(data.batch.students || []);
       }
     } catch (err) {

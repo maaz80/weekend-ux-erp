@@ -4,7 +4,7 @@ const TOKEN_KEY = "weekend_ux_erp_token";
 const USER_KEY = "weekend_ux_erp_user";
 
 export const getErpToken = () => {
-  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
+  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || "";
 };
 
 export const setErpToken = (token, user, remember = true) => {
@@ -27,9 +27,9 @@ export const clearErpToken = () => {
 export const getErpUser = () => {
   try {
     const raw = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
-    return raw ? JSON.parse(raw) : { username: "erpadmin", role: "erp_admin" };
+    return raw ? JSON.parse(raw) : null;
   } catch {
-    return { username: "erpadmin", role: "erp_admin" };
+    return null;
   }
 };
 
@@ -38,14 +38,31 @@ export const isErpAuthenticated = () => {
   if (!token) return false;
 
   try {
-    const decoded = JSON.parse(atob(token));
-    if (decoded.exp && decoded.exp < Date.now()) {
-      clearErpToken();
-      return false;
+    const parts = token.split(".");
+    let payloadJson = "";
+    if (parts.length === 3) {
+      const base64Url = parts[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      payloadJson = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+    } else {
+      payloadJson = atob(token);
+    }
+
+    const decoded = JSON.parse(payloadJson);
+    if (decoded.exp) {
+      const expMs = decoded.exp < 1e11 ? decoded.exp * 1000 : decoded.exp;
+      if (expMs < Date.now()) {
+        clearErpToken();
+        return false;
+      }
     }
     return true;
   } catch {
-    // If not a JSON token, check if it's non-empty
-    return !!token;
+    return Boolean(token && token.length > 10);
   }
 };

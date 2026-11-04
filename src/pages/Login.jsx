@@ -36,7 +36,10 @@ export default function Login() {
         throw new Error(data?.error || data?.message || "Invalid ERP credentials.");
       }
 
-      const token = data.token || "authenticated_erp_session";
+      const token = data.token;
+      if (!token) {
+        throw new Error("Server authentication failed: no token received.");
+      }
       const user = data.user || { username: username.trim(), role: "erp_admin" };
 
       setErpToken(token, user);
